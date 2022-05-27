@@ -1,0 +1,10 @@
+<div class="selection-container">
+	<select #baseCountry (mouseleave)="changeBaseCountry(baseCountry.value)" id="baseCountry">
+		<option *ngFor="let item of items" [value]="item">{{item}}</option>
+	</select>
+	<p>to</p>
+	<select #secondCountry (mouseleave)="changeSecondCountry(secondCountry.value)" id="secondCountry">
+		<option *ngFor="let item of items" [value]="item">{{item}}</option>
+	</select>
+</div>
+<app-currency-value [baseCountry]="baseCountry" [secondCountry]="secondCountry"></app-currency-value>

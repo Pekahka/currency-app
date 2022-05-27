@@ -1,0 +1,22 @@
+.selection-container {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	width: 100%;
+}
+
+p {
+	font-size: 20px;
+
+}
+
+select {
+	font-size: 17px;
+	padding: 5px;
+	border-radius: 10px;
+	border: none;
+}
+
+select:focus {
+	outline: none;
+}

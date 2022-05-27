@@ -1,0 +1,5 @@
+<div class="result-container">
+	<input [(ngModel)]="baseCurrency" (input)="convertSecondCountry($event)" type="text">
+	<p>=</p>
+	<input [(ngModel)]="secondCurrency" (input)="convertBaseCountry($event)" type="text">
+</div>

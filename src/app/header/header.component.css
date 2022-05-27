@@ -1,0 +1,10 @@
+div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+p:last-child {
+	padding-left: 50px;
+}
