@@ -8,69 +8,46 @@ import { CurrencyApiDataService } from '../currency-api-data.service';
 })
 export class CurrencyValueComponent implements OnInit {
 
-
-
   constructor(private currency: CurrencyApiDataService) { }
 
-  // currencyJson: any = [];
+  _baseCountry: string = '';
+  @Input() set baseCountry(value: string) {
+    this._baseCountry = value;
+    this.convertBaseCountry(this.secondCurrency);
+  }
 
-  // baseCountry = "UAH";
+  _secondCountry: string = '';
+  @Input() set secondCountry(value: string) {
+    this._secondCountry = value;
+    this.convertSecondCountry(this.baseCurrency);
 
-  // secondCountry = "USD";
-
-  // result: string = "1";
-
-  @Input() baseCountry: any;
-  @Input() secondCountry: any;
+  }
 
   currencyJSON: any = [];
-
-  baseCurrency: number = 1;
-  secondCurrency: number = 1;
+  baseCurrency: number = 0;
+  secondCurrency: number = 0;
 
   convertSecondCountry(event: any) {
+    this.currency.getCurrencyData(this._baseCountry).subscribe(data => {
+      this.currencyJSON = data;
+    });
 
-    (this.currency.getCurrencyData(this.baseCountry.value).subscribe(data => {
-      // console.log(data)
-      this.currencyJSON = JSON.stringify(data);
-      // console.log(this.currencyJSON)
-      this.currencyJSON = JSON.parse(this.currencyJSON)
-      // console.log(this.currencyJSON)
-
-      // console.log(this.secondCountry.value)
-
-      // console.log(this.currencyJSON.rates[this.secondCountry.value]);
-
-
-
-    }));
-    // console.log(this.currencyJSON.rates[this.secondCountry.value])
-    // event = event.target.value * this.currencyJSON.rates[this.secondCountry.value];
-    this.secondCurrency = event.target.value * this.currencyJSON.rates[this.secondCountry.value]
+    const value = event || 0;
+    if (this.currencyJSON.rates) {
+      this.secondCurrency = value * this.currencyJSON.rates[this._secondCountry]
+    }
   }
 
   convertBaseCountry(event: any) {
+    this.currency.getCurrencyData(this._secondCountry).subscribe(data => {
+      this.currencyJSON = data;
+    });
 
-    (this.currency.getCurrencyData(this.secondCountry.value).subscribe(data => {
-      // console.log(data)
-      this.currencyJSON = JSON.stringify(data);
-      // console.log(this.currencyJSON)
-      this.currencyJSON = JSON.parse(this.currencyJSON)
-      // console.log(this.currencyJSON)
-
-      // console.log(this.secondCountry.value)
-
-      // console.log(this.currencyJSON.rates[this.baseCountry.value]);
-
-
-
-    }));
-    // console.log(this.currencyJSON.rates[this.secondCountry.value])
-    // event = event.target.value * this.currencyJSON.rates[this.secondCountry.value];
-    this.baseCurrency = event.target.value * this.currencyJSON.rates[this.baseCountry.value]
-
+    const value = event || 0;
+    if (this.currencyJSON.rates) {
+      this.baseCurrency = value * this.currencyJSON.rates[this._baseCountry]
+    }
   }
-
 
   ngOnInit(): void {
   }

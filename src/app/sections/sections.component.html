@@ -1,10 +1,12 @@
 <div class="selection-container">
-	<select #baseCountry (mouseleave)="changeBaseCountry(baseCountry.value)" id="baseCountry">
-		<option *ngFor="let item of items" [value]="item">{{item}}</option>
+
+	<select [(ngModel)]="baseCountryValue" (ngModelChange)="changeBaseCountry($event)" id="baseCountry">
+		<option *ngFor="let item of baseCountryOptions | async" [value]="item">{{item}}</option>
 	</select>
 	<p>to</p>
-	<select #secondCountry (mouseleave)="changeSecondCountry(secondCountry.value)" id="secondCountry">
-		<option *ngFor="let item of items" [value]="item">{{item}}</option>
+	<select [(ngModel)]="secondCountryValue" (change)="changeSecondCountry($event)" id="secondCountry">
+		<option *ngFor="let item of secondCountryOptions | async" [value]="item">{{item}}</option>
 	</select>
 </div>
-<app-currency-value [baseCountry]="baseCountry" [secondCountry]="secondCountry"></app-currency-value>
+<app-currency-value [baseCountry]="baseCountryValue" [secondCountry]="secondCountryValue">
+</app-currency-value>

@@ -11,40 +11,30 @@ export class HeaderComponent implements OnInit {
   constructor(private currency: CurrencyApiDataService) { }
 
   UACountry = 'UAH';
-
   currencyJSON: any = [];
   usdCurrency: number = 0;
   eurCurrency: number = 0;
 
-  converterUSD(country: string) {
-    (this.currency.getCurrencyData(this.UACountry).subscribe(data => {
-      this.currencyJSON = JSON.stringify(data);
-      this.currencyJSON = JSON.parse(this.currencyJSON)
-
-      // console.log(this.currencyJSON.rates[country]);
-      this.usdCurrency = this.currencyJSON.rates[country]
-    }))
-
+  converterUSD() {
+    this.currency.getCurrencyData(this.UACountry).subscribe(data => {
+      this.currencyJSON = data
+      this.usdCurrency = this.currencyJSON.rates.USD
+    })
   }
 
-  converterEUR(country: string) {
-    (this.currency.getCurrencyData(this.UACountry).subscribe(data => {
-      this.currencyJSON = JSON.stringify(data);
-      this.currencyJSON = JSON.parse(this.currencyJSON)
-
-      // console.log(this.currencyJSON.rates[country]);
-      this.eurCurrency = this.currencyJSON.rates[country]
-    }))
-
+  converterEUR() {
+    this.currency.getCurrencyData(this.UACountry).subscribe(data => {
+      this.currencyJSON = data;
+      this.eurCurrency = this.currencyJSON.rates.EUR
+    })
   }
 
   ngOnInit(): void {
+    this.converterUSD();
+    this.converterEUR();
   }
 
-  ngAfterViewInit(): void {
-    this.converterUSD('USD');
-    this.converterEUR('EUR');
-  }
+
 
 
 

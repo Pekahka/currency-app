@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { BehaviorSubject, map, Observable, of, Subject, switchMap } from 'rxjs';
 import { CurrencyApiDataService } from '../currency-api-data.service';
-
-
 
 @Component({
   selector: 'app-sections',
@@ -10,73 +9,47 @@ import { CurrencyApiDataService } from '../currency-api-data.service';
 })
 export class SectionsComponent implements OnInit {
 
-  constructor(private currency: CurrencyApiDataService) { }
-
-
+  constructor(private currency: CurrencyApiDataService) {
+    this.baseCountry.subscribe(v => this.baseCountryValue = v)
+    this.secondCountry.subscribe(v => this.secondCountryValue = v)
+  }
 
   items: any = [];
-
   selectionItems: any = [];
+  baseCountry = new BehaviorSubject('UAH');
+  baseCountryValue: any;
+  secondCountry = new BehaviorSubject('USD');
+  secondCountryValue: any;
 
-  baseCountry = "";
+  countryItems = this.baseCountry.pipe(switchMap(value => {
+    return this.loadCountry(value)
+  }), map(value => {
+    const countryRates = value.rates;
+    const countries = Object.keys(countryRates);
+    return countries;
+  }))
 
-  secondCountry = "";
+  baseCountryOptions = this.countryItems.pipe(map(value => {
+    return value.filter(country => country != this.secondCountry.getValue())
+  }))
 
+  secondCountryOptions = this.countryItems.pipe(map(value => {
+    return value.filter(country => country != this.baseCountry.getValue())
+  }))
 
-
-
-  changeBaseCountry(country: string) {
-
-    (this.currency.getCurrencyData(this.baseCountry).subscribe(data => {
-      // console.log(data)
-      this.items = JSON.stringify(data);
-      // console.log(this.currencyJSON)
-      this.items = JSON.parse(this.items)
-      // console.log(this.items)
-      this.items = Object.keys(this.items.rates)
-      // console.log(this.items.rates)
-      // this.items = this.items.rates
-      // console.log(this.secondCountry.value)
-
-
-
-
-
-    }));
-
-    this.baseCountry = country;
-    // console.log(this.baseCountry)
+  changeBaseCountry(event: any) {
+    this.baseCountry.next(event);
   }
 
-  changeSecondCountry(country: string) {
-
-    (this.currency.getCurrencyData(this.baseCountry).subscribe(data => {
-      // console.log(data)
-      this.items = JSON.stringify(data);
-      // console.log(this.currencyJSON)
-      this.items = JSON.parse(this.items)
-      // console.log(this.items)
-      this.items = Object.keys(this.items.rates)
-      // console.log(this.items.rates)
-      // this.items = this.items.rates
-      // console.log(this.secondCountry.value)
-
-
-
-
-
-    }));
-    this.secondCountry = country;
+  changeSecondCountry(event: any) {
+    this.secondCountry.next(event.target.value);
   }
 
 
-
+  loadCountry(country: any): Observable<any> {
+    return this.currency.getCurrencyData(country)
+  }
 
   ngOnInit(): void {
-  }
-
-  ngAfterViewInit(): void {
-    this.changeBaseCountry(this.baseCountry);
-    this.changeSecondCountry(this.secondCountry);
   }
 }
